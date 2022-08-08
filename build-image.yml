@@ -1,0 +1,103 @@
+# Use the Microsoft hosted runners
+pool:
+    vmImage: 'ubuntu-latest'
+
+# Load the common variables repo
+resources:
+  repositories:
+  - repository: az-aib-common
+    type: github
+    endpoint: Azure
+    name: kevinpz/az-aib-common
+
+# Source the variables
+variables:
+# Load the common variables
+- template: common-variables.yml@az-aib-common
+# VM SKU for building the image
+- name: image_build_sku
+  value: 'Standard_D2ds_v4'
+# VM size for building the image
+- name: image_build_size
+  value: 30
+
+parameters:
+# The source image publisher to use
+- name: src_image_publisher
+  type: string 
+# The source image offer to use
+- name: src_image_offer
+  type: string 
+# The source image sku to use
+- name: src_image_sku
+  type: string 
+# The source image sku to use
+- name: image_name
+  type: string 
+# The source image sku to use
+- name: image_build_sku
+  type: string 
+# The source image sku to use
+- name: image_build_size
+  type: string 
+
+stages:
+# Create the image definition in the compute image gallery
+- stage: Deploy
+  jobs:
+  - job: Deploy
+    steps:
+      # Download Terraform binary
+      - task: TerraformInstaller@0
+        displayName: install terraform
+        inputs:
+          terraformVersion: latest
+      # Init Terraform backend and download providers
+      - task: TerraformCLI@0
+        displayName: 'terraform init'
+        inputs:
+          workingDirectory: terraform
+          command: init
+          # Configure the backend to store the .tfstate file
+          backendType: azurerm
+          backendServiceArm: '$(sc_name)'
+          backendAzureRmSubscriptionId: '$(subscription_id)'
+          backendAzureRmResourceGroupName: '$(stg_rg_name)'
+          backendAzureRmStorageAccountName: '$(stg_name)'
+          backendAzureRmContainerName: '$(stg_container_name)'
+          backendAzureRmKey: '$(System.TeamProject)/$(Build.Repository.Name).tfstate'
+      # Deploy Terraform ressources
+      - task: TerraformCLI@0
+        displayName: 'terraform apply'
+        inputs:
+          workingDirectory: terraform
+          command: apply
+          environmentServiceName: '$(sc_name)'
+          providerAzureRmSubscriptionId: '$(subscription_id)'
+          commandOptions: '-var "location=$(location)" -var "rg_name=$(rg_name)" -var "id_name=$(id_name)" -var "gallery_name=$(gallery_name)" -var "image_name=$(image_name)"'
+
+# Build the image
+- stage: Build
+  jobs:
+  - job: Build
+    steps:
+      - script: |
+          sed -i -e "s/<subscription_id>/$(subscription_id)/g" ./build/$(image_name).json
+          sed -i -e "s/<rg_name>/$(rg_name)/g" ./build/$(image_name).json
+          sed -i -e "s/<image_name>/$(image_name)/g" ./build/$(image_name).json
+          sed -i -e "s/<gallery_name>/$(gallery_name)/g" ./build/$(image_name).json
+          sed -i -e "s/<region_1>/$(location)/g" ./build/$(image_name).json
+          sed -i -e "s/<id_name>/$(id_name)/g" ./build/$(image_name).json
+          sed -i -e "s/<src_image_publisher>/$(src_image_publisher)/g" ./build/$(image_name).json
+          sed -i -e "s/<src_image_offer>/$(src_image_offer)/g" ./build/$(image_name).json
+          sed -i -e "s/<src_image_sku>/$(src_image_sku)/g" ./build/$(image_name).json
+          sed -i -e "s/<image_build_sku>/$(image_build_sku)/g" ./build/$(image_name).json
+          sed -i -e "s/<image_build_size>/$(image_build_size)/g" ./build/$(image_name).json
+      - task: AzureCLI@2
+        inputs:
+          workingDirectory: scripts
+          azureSubscription: '$(sc_name)'
+          scriptType: 'bash'
+          scriptLocation: 'scriptPath'
+          arguments: '$(subscription_id) $(rg_name)'
+          scriptPath: './scripts/build.sh'
