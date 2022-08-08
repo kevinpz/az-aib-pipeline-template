@@ -30,12 +30,6 @@ parameters:
 # The source image sku to use
 - name: image_name
   type: string 
-# The source image sku to use
-- name: image_build_sku
-  type: string 
-# The source image sku to use
-- name: image_build_size
-  type: string 
 
 stages:
 # Create the image definition in the compute image gallery
