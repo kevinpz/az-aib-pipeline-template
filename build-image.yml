@@ -46,7 +46,7 @@ stages:
       - task: TerraformCLI@0
         displayName: 'terraform init'
         inputs:
-          workingDirectory: terraform@self
+          workingDirectory: terraform@az-aib-pipeline-template
           command: init
           # Configure the backend to store the .tfstate file
           backendType: azurerm
