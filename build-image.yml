@@ -37,6 +37,8 @@ stages:
   jobs:
   - job: Deploy
     steps:
+     - script: |
+          ls
       # Download Terraform binary
       - task: TerraformInstaller@0
         displayName: install terraform
