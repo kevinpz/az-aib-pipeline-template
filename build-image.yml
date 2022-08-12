@@ -102,4 +102,4 @@ stages:
           scriptType: 'bash'
           scriptLocation: 'scriptPath'
           arguments: '$(subscription_id) $(rg_name)'
-          scriptPath: './az-aib-pipeline-template/scripts'build.sh'
+          scriptPath: './az-aib-pipeline-template/scripts/build.sh'
