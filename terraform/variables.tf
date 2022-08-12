@@ -18,14 +18,14 @@ variable "image_type" {
   type = string
 }
 
-variable "image_publisher" {
+variable "src_image_publisher" {
   type = string
 }
 
-variable "image_offer" {
+variable "src_image_offer" {
   type = string
 }
 
-variable "image_sku" {
+variable "src_image_sku" {
   type = string
 }

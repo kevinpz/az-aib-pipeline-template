@@ -8,8 +8,8 @@ resource "azurerm_shared_image" "image" {
   hyper_v_generation  = "V2"
 
   identifier {
-    publisher = var.image_publisher
-    offer     = var.image_offer
-    sku       = var.image_sku
+    publisher = var.src_image_publisher
+    offer     = var.src_image_offer
+    sku       = var.src_image_sku
   }
 }
