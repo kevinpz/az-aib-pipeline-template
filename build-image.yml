@@ -39,7 +39,6 @@ stages:
   jobs:
   - job: Deploy
     steps:
-      - checkout: self
       # Download Terraform binary
       - task: TerraformInstaller@0
         displayName: install terraform
@@ -74,7 +73,6 @@ stages:
   jobs:
   - job: Build
     steps:
-      - checkout: self
       - script: |
           sed -i -e "s/<subscription_id>/$(subscription_id)/g" ./build/$(image_name).json
           sed -i -e "s/<rg_name>/$(rg_name)/g" ./build/$(image_name).json
