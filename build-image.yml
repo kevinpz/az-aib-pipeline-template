@@ -10,12 +10,6 @@ resources:
 variables:
 # Load the common variables
 - template: common-variables.yml@az-aib-common
-# VM SKU for building the image
-- name: image_build_sku
-  value: 'Standard_D2ds_v4'
-# VM size for building the image
-- name: image_build_size
-  value: 30
 
 parameters:
 # The source image publisher to use
@@ -30,6 +24,14 @@ parameters:
 # The source image sku to use
 - name: image_name
   type: string 
+# VM SKU for building the image
+- name: image_build_sku
+  type: string 
+  default: 'Standard_D2ds_v4'
+# VM size for building the image
+- name: image_build_size
+  type: number
+  default: 30
 
 stages:
 # Create the image definition in the compute image gallery
@@ -37,8 +39,7 @@ stages:
   jobs:
   - job: Deploy
     steps:
-      - script: |
-          ls
+      - checkout: self
       # Download Terraform binary
       - task: TerraformInstaller@0
         displayName: install terraform
@@ -48,7 +49,7 @@ stages:
       - task: TerraformCLI@0
         displayName: 'terraform init'
         inputs:
-          workingDirectory: terraform@az-aib-pipeline-template
+          workingDirectory: terraform
           command: init
           # Configure the backend to store the .tfstate file
           backendType: azurerm
@@ -73,6 +74,7 @@ stages:
   jobs:
   - job: Build
     steps:
+      - checkout: self
       - script: |
           sed -i -e "s/<subscription_id>/$(subscription_id)/g" ./build/$(image_name).json
           sed -i -e "s/<rg_name>/$(rg_name)/g" ./build/$(image_name).json
