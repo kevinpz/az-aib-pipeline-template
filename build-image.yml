@@ -97,9 +97,9 @@ stages:
       # Build the VM image
       - task: AzureCLI@2
         inputs:
-          workingDirectory: scripts
+          workingDirectory: './az-aib-pipeline-template/scripts'
           azureSubscription: '$(sc_name)'
           scriptType: 'bash'
           scriptLocation: 'scriptPath'
           arguments: '$(subscription_id) $(rg_name)'
-          scriptPath: './scripts/build.sh'
+          scriptPath: './az-aib-pipeline-template/scripts'build.sh'
