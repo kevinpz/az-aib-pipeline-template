@@ -24,6 +24,12 @@ parameters:
 # The source image sku to use
 - name: image_name
   type: string 
+# The type of image to build
+- name: image_type
+  type: string 
+  values :
+  - Linux
+  - Windows
 # VM SKU for building the image
 - name: image_build_sku
   type: string 
@@ -70,7 +76,7 @@ stages:
           command: apply
           environmentServiceName: '$(sc_name)'
           providerAzureRmSubscriptionId: '$(subscription_id)'
-          commandOptions: '-var "location=$(location)" -var "rg_name=$(rg_name)" -var "gallery_name=$(gallery_name)" -var "image_name=$(image_name)" -var "src_image_publisher=$(src_image_publisher)" -var "src_image_offer=$(src_image_offer)" -var "src_image_sku=$(src_image_sku)"'
+          commandOptions: '-var "location=$(location)" -var "rg_name=$(rg_name)" -var "gallery_name=$(gallery_name)" -var "image_name=$(image_name)" -var "image_type=$(image_type)" -var "src_image_publisher=$(src_image_publisher)" -var "src_image_offer=$(src_image_offer)" -var "src_image_sku=$(src_image_sku)"'
 
 # Build the image
 - stage: Build
