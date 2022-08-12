@@ -48,7 +48,7 @@ stages:
   jobs:
   - job: Deploy
     steps:
-      - checkout: az-aib-pipeline-template
+      #- checkout: az-aib-pipeline-template
       # Download Terraform binary
       - task: TerraformInstaller@0
         displayName: install terraform
@@ -58,7 +58,7 @@ stages:
       - task: TerraformCLI@0
         displayName: 'terraform init'
         inputs:
-          workingDirectory: terraform
+          workingDirectory: terraform@az-aib-pipeline-template
           command: init
           # Configure the backend to store the .tfstate file
           backendType: azurerm
@@ -72,7 +72,7 @@ stages:
       - task: TerraformCLI@0
         displayName: 'terraform apply'
         inputs:
-          workingDirectory: terraform
+          workingDirectory: terraform@az-aib-pipeline-template
           command: apply
           environmentServiceName: '$(sc_name)'
           providerAzureRmSubscriptionId: '$(subscription_id)'
