@@ -92,7 +92,7 @@ stages:
       # Replace the variable inside the image template
       - task: CmdLine@2
         inputs:
-          script: './set_variables.sh'
+          script: 'bash ./set_variables.sh'
           workingDirectory: './az-aib-pipeline-template/scripts'
       # Build the VM image
       - task: AzureCLI@2
