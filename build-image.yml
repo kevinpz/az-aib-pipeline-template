@@ -5,10 +5,6 @@ resources:
     type: github
     endpoint: Azure
     name: kevinpz/az-aib-common
-  - repository: az-aib-pipeline-template
-    type: github
-    endpoint: Azure
-    name: kevinpz/az-aib-pipeline-template
 
 # Source the variables
 variables:
