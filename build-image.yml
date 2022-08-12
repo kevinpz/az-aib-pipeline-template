@@ -36,6 +36,9 @@ parameters:
 stages:
 # Create the image definition in the compute image gallery
 - stage: Deploy
+  # Use the Microsoft hosted runners
+  pool:
+      vmImage: 'ubuntu-latest'
   jobs:
   - job: Deploy
     steps:
@@ -71,6 +74,9 @@ stages:
 
 # Build the image
 - stage: Build
+  # Use the Microsoft hosted runners
+  pool:
+      vmImage: 'ubuntu-latest'
   jobs:
   - job: Build
     steps:
