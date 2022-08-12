@@ -1,0 +1,52 @@
+{
+    "type": "Microsoft.VirtualMachineImages",
+    "apiVersion": "2022-02-14",
+    "location": "<region_1>",
+    "dependsOn": [],
+    "tags": {
+        "imagebuilderTemplate": "<image_name>",
+        "userIdentity": "enabled"
+    },
+
+    "identity": {
+        "type": "UserAssigned",
+        "userAssignedIdentities": {
+            "/subscriptions/<subscription_id>/resourceGroups/<rg_name>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<id_name>": {}            
+        }
+    },
+    
+    "properties": {
+        "buildTimeoutInMinutes" : 90,
+        "vmProfile": 
+        {
+            "vmSize": "<image_build_sku>",
+            "osDiskSizeGB": <image_build_size>
+        },
+    
+        "source": {
+            "type": "PlatformImage",
+                "publisher": "<src_image_publisher>",
+                "offer": "<src_image_offer>",
+                "sku": "<src_image_sku>",
+                "version": "latest"
+        },
+        "customize": [
+            <customize>
+        ],
+        "distribute": 
+        [
+            {   
+                "type": "SharedImage",
+                "galleryImageId": "/subscriptions/<subscription_id>/resourceGroups/<rg_name>/providers/Microsoft.Compute/galleries/<gallery_name>/images/<image_name>",
+                "runOutputName": "<image_name>",
+                "artifactTags": {
+                    "source": "azureVmImageBuilder",
+                    "baseosimg": "<image_name>"
+                },
+                "replicationRegions": [
+                  "<region_1>"
+                ]
+            }
+        ]
+    }
+}

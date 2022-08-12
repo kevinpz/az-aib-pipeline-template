@@ -1,0 +1,11 @@
+sed -i -e "s/<subscription_id>/$(subscription_id)/g" ./build/$(image_name).json
+sed -i -e "s/<rg_name>/$(rg_name)/g" ./build/$(image_name).json
+sed -i -e "s/<image_name>/$(image_name)/g" ./build/$(image_name).json
+sed -i -e "s/<gallery_name>/$(gallery_name)/g" ./build/$(image_name).json
+sed -i -e "s/<region_1>/$(location)/g" ./build/$(image_name).json
+sed -i -e "s/<id_name>/$(id_name)/g" ./build/$(image_name).json
+sed -i -e "s/<src_image_publisher>/$(src_image_publisher)/g" ./build/$(image_name).json
+sed -i -e "s/<src_image_offer>/$(src_image_offer)/g" ./build/$(image_name).json
+sed -i -e "s/<src_image_sku>/$(src_image_sku)/g" ./build/$(image_name).json
+sed -i -e "s/<image_build_sku>/$(image_build_sku)/g" ./build/$(image_name).json
+sed -i -e "s/<image_build_size>/$(image_build_size)/g" ./build/$(image_name).json

@@ -1,7 +1,7 @@
 # Select the subscription
 az account set --subscription $1
 
-cat $3.json
+cat ../template/image_template.json
 exit 0
 
 # The delete the old template if it exists
@@ -13,7 +13,7 @@ az resource delete \
 # Create the new image template
 az resource create \
     --resource-group $2 \
-    --properties @$3.json \
+    --properties @../template/image_template.json \
     --is-full-object \
     --resource-type Microsoft.VirtualMachineImages/imageTemplates \
     -n $3
