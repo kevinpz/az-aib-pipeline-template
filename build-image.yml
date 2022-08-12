@@ -5,6 +5,10 @@ resources:
     type: github
     endpoint: Azure
     name: kevinpz/az-aib-common
+  - repository: az-aib-pipeline-template
+    type: github
+    endpoint: Azure
+    name: kevinpz/az-aib-pipeline-template
 
 # Source the variables
 variables:
@@ -39,6 +43,7 @@ stages:
   jobs:
   - job: Deploy
     steps:
+      - checkout: az-aib-pipeline-template
       # Download Terraform binary
       - task: TerraformInstaller@0
         displayName: install terraform
@@ -73,6 +78,7 @@ stages:
   jobs:
   - job: Build
     steps:
+      - checkout: az-aib-pipeline-template
       - script: |
           sed -i -e "s/<subscription_id>/$(subscription_id)/g" ./build/$(image_name).json
           sed -i -e "s/<rg_name>/$(rg_name)/g" ./build/$(image_name).json
