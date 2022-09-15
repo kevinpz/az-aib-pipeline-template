@@ -62,11 +62,11 @@ stages:
           command: init
           # Configure the backend to store the .tfstate file
           backendType: azurerm
-          backendServiceArm: '$(variables.sc_name)'
-          backendAzureRmSubscriptionId: '$(variables.subscription_id)'
-          backendAzureRmResourceGroupName: '$(variables.stg_rg_name)'
-          backendAzureRmStorageAccountName: '$(variables.stg_name)'
-          backendAzureRmContainerName: '$(variables.stg_container_name)'
+          backendServiceArm: '$(sc_name)'
+          backendAzureRmSubscriptionId: '$(subscription_id)'
+          backendAzureRmResourceGroupName: '$(stg_rg_name)'
+          backendAzureRmStorageAccountName: '$(stg_name)'
+          backendAzureRmContainerName: '$(stg_container_name)'
           backendAzureRmKey: '$(System.TeamProject)/$(Build.Repository.Name).tfstate'
       # Deploy Terraform ressources
       - task: TerraformCLI@0
@@ -74,8 +74,8 @@ stages:
         inputs:
           workingDirectory: terraform
           command: apply
-          environmentServiceName: '$(variables.sc_name)'
-          providerAzureRmSubscriptionId: '$(variables.subscription_id)'
+          environmentServiceName: '$(sc_name)'
+          providerAzureRmSubscriptionId: '$(subscription_id)'
           commandOptions: '-var "location=${{ variables.location }}" -var "rg_name=${{ variables.rg_name }}" -var "gallery_name=${{ variables.gallery_name }}" -var "image_name=${{ parameters.image_name }}" -var "image_type=${{ parameters.image_type }}" -var "src_image_publisher=${{ parameters.src_image_publisher }}" -var "src_image_offer=${{ parameters.src_image_offer }}" -var "src_image_sku=${{ parameters.src_image_sku }}"'
 
 # Build the image
@@ -95,23 +95,23 @@ stages:
           script: 'bash ./set_variables.sh'
           workingDirectory: './az-aib-pipeline-template/scripts'
           env:
-            subscription_id: $(variables.subscription_id)
-            rg_name: $(variables.rg_name)
-            image_name: $(parameters.image_name)
-            gallery_name: $(variables.gallery_name)
-            region_1: $(variables.location)
-            id_name: $(variables.id_name)
-            src_image_publisher: $(parameters.src_image_publisher)
-            src_image_offer: $(parameters.src_image_offer)
-            src_image_sku: $(parameters.src_image_sku)
-            image_build_sku: $(parameters.image_build_sku)
-            image_build_size: $(parameters.image_build_size)
+            subscription_id: $(subscription_id)
+            rg_name: $(rg_name)
+            image_name: $(image_name)
+            gallery_name: $(gallery_name)
+            region_1: $(location)
+            id_name: $(id_name)
+            src_image_publisher: $(src_image_publisher)
+            src_image_offer: $(src_image_offer)
+            src_image_sku: $(src_image_sku)
+            image_build_sku: $(image_build_sku)
+            image_build_size: $(image_build_size)
       # Build the VM image
       - task: AzureCLI@2
         inputs:
           workingDirectory: './az-aib-pipeline-template/scripts'
-          azureSubscription: '$(variables.sc_name)'
+          azureSubscription: '$(sc_name)'
           scriptType: 'bash'
           scriptLocation: 'scriptPath'
-          arguments: '$(variables.subscription_id) $(variables.rg_name)'
+          arguments: '$(subscription_id) $(rg_name)'
           scriptPath: './az-aib-pipeline-template/scripts/build.sh'
